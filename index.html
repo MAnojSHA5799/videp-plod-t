@@ -24,14 +24,14 @@ width:100%;
 height:100%;
 object-fit:cover;
 z-index:1;
-transition:1s;
+transition:opacity 1.5s ease;
 }
 
 .overlay{
 position:absolute;
 width:100%;
 height:100%;
-background:linear-gradient(to bottom,rgba(0,0,0,0.3),rgba(0,0,0,0.8));
+background:linear-gradient(to bottom,rgba(0,0,0,0.2),rgba(0,0,0,0.85));
 z-index:2;
 }
 
@@ -48,10 +48,16 @@ text-align:center;
 padding:30px;
 color:white;
 z-index:5;
+animation:fadeIn 1.2s ease;
 }
 
 .screen.active{
 display:flex;
+}
+
+@keyframes fadeIn{
+from{opacity:0;transform:translateY(20px)}
+to{opacity:1;transform:translateY(0)}
 }
 
 .startOverlay{
@@ -71,9 +77,10 @@ background:black;
 background:#ec4899;
 padding:20px 40px;
 border-radius:40px;
-font-size:20px;
+font-size:22px;
 font-weight:bold;
 cursor:pointer;
+box-shadow:0 10px 30px rgba(0,0,0,0.4);
 }
 
 </style>
@@ -87,16 +94,22 @@ cursor:pointer;
 <div class="overlay"></div>
 
 <div id="startOverlay" class="startOverlay">
-<div class="startBtn">Tap To Start Video</div>
+<div class="startBtn">▶ Tap To Start Video</div>
 </div>
+
+<!-- Background Music -->
+
+<audio id="bgMusic" loop>
+<source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_7d0fdbd1b6.mp3">
+</audio>
 
 <!-- Scene 1 -->
 
 <div id="s1" class="screen">
 <div>
-<h1 class="text-5xl font-bold">PINKCITY</h1>
-<h2 class="text-3xl text-pink-500">DEVELOPERS</h2>
-<p class="mt-5">Premium Township Project</p>
+<h1 class="text-6xl font-bold">PINKCITY</h1>
+<h2 class="text-4xl text-pink-400 mt-2">DEVELOPERS</h2>
+<p class="mt-6 text-xl">Premium Township Project</p>
 </div>
 </div>
 
@@ -114,7 +127,7 @@ cursor:pointer;
 <div id="s3" class="screen">
 <div>
 <h2 class="text-4xl font-bold">3 साल में निवेश दोगुना</h2>
-<p class="mt-4">Buyback Policy Available</p>
+<p class="mt-4 text-xl">Buyback Policy Available</p>
 </div>
 </div>
 
@@ -122,8 +135,8 @@ cursor:pointer;
 
 <div id="s4" class="screen">
 <div>
-<h1 class="text-6xl font-bold text-yellow-400">₹1299</h1>
-<p class="mt-3">Per Square Feet</p>
+<h1 class="text-7xl font-bold text-yellow-400">₹1299</h1>
+<p class="mt-4 text-2xl">Per Square Feet</p>
 </div>
 </div>
 
@@ -146,7 +159,7 @@ cursor:pointer;
 <h2 class="text-3xl font-bold">Call Now</h2>
 <h1 class="text-4xl mt-4 text-pink-400">93049 93560</h1>
 <p class="mt-5 text-sm">
-408 RC Western Mall  
+408 RC Western Mall<br>
 Saguna More Patna
 </p>
 </div>
@@ -161,7 +174,7 @@ const images=[
 "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=1600",
 "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1600",
 "https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=1600",
-"https://images.unsplash.com/photo-1572120360610-d971b9d7767c?w=1600",
+"https://images.unsplash.com/photo-1599423300746-b62533397364?w=1600",
 "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1600",
 "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=1600"
 
@@ -181,7 +194,7 @@ document.getElementById("bgImage").src=images[step]
 
 }
 
-async function playFullVoice(){
+async function playVoice(){
 
 const script=`
 
@@ -193,7 +206,7 @@ Sirf teen saal mein aapka investment ho sakta hai double.
 
 Sirf barah sau ninyanve rupaye per square feet mein plot book karein.
 
-Yahan electricity water supply aur street light available hai.
+Yahan electricity water supply aur street light jaise sabhi modern facilities available hain.
 
 Aaj hi call karein 9 3 0 4 9 9 3 5 6 0.
 
@@ -210,7 +223,11 @@ headers:{
 
 body:JSON.stringify({
 text:script,
-model_id:"eleven_multilingual_v2"
+model_id:"eleven_multilingual_v2",
+voice_settings:{
+stability:0.5,
+similarity_boost:0.8
+}
 })
 
 })
@@ -221,6 +238,8 @@ const url=URL.createObjectURL(blob)
 
 const audio=new Audio(url)
 
+audio.volume=1
+
 audio.play()
 
 }
@@ -229,19 +248,22 @@ function startVideo(){
 
 document.getElementById("startOverlay").style.display="none"
 
+const music=document.getElementById("bgMusic")
+
+music.volume=0.25
+music.play()
+
 showScene()
 
-playFullVoice()
+playVoice()
 
 let timer=setInterval(()=>{
 
 step++
 
 if(step>=scenes.length){
-
 clearInterval(timer)
 return
-
 }
 
 showScene()

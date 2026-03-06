@@ -15,7 +15,6 @@ overflow:hidden;
 }
 
 #bg{
-
 position:fixed;
 top:0;
 left:0;
@@ -25,31 +24,25 @@ background-size:cover;
 background-position:center;
 filter:brightness(0.6);
 transition:background-image 1s ease-in-out;
-
 }
 
 #content{
-
 position:absolute;
 top:50%;
 left:50%;
 transform:translate(-50%,-50%);
 text-align:center;
 width:80%;
-
 }
 
 #text{
-
 font-size:42px;
 line-height:1.6;
 font-weight:bold;
 text-shadow:0px 2px 10px rgba(0,0,0,0.8);
-
 }
 
 button{
-
 margin-top:40px;
 padding:15px 40px;
 font-size:20px;
@@ -58,7 +51,6 @@ border:none;
 color:white;
 border-radius:8px;
 cursor:pointer;
-
 }
 
 </style>
@@ -81,29 +73,29 @@ cursor:pointer;
 const segments = [
 
 {
-text:"आई आई टी पटना बिहटा के पास ग्रेटर पटना में टाउनशिप में आवासीय जमीन खरीदने का सुनहरा अवसर",
-image:"img1.jpg"
-},
-
-{
-text:"तीन साल में निवेश दोगुना बायबैक पॉलिसी के साथ",
-image:"img2.jpg"
-},
-
-{
-text:"ग्रेटर पटना में निवेश करें मात्र बारह सौ निन्यानवे रुपये प्रति स्क्वायर फीट",
-image:"img3.jpg"
-},
-
-{
-text:"बिजली पानी और स्ट्रीट लाइट जैसी सभी सुविधाओं के साथ",
-image:"img4.jpg"
-},
-
-{
-text:"आज ही बुक करें अपना प्लॉट",
-image:"img5.jpg"
-}
+    text:"आई आई टी पटना, बिहटा के पास ग्रेटर पटना में विकसित हो रही टाउनशिप में आवासीय जमीन खरीदने का सुनहरा अवसर। भविष्य के लिए सुरक्षित और शानदार निवेश।",
+    image:"https://img.freepik.com/free-photo/aerial-view-land-plot-real-estate-development_23-2149935673.jpg"
+    },
+    
+    {
+    text:"यहां निवेश करने पर आपको मिलती है तीन साल में निवेश दोगुना होने की संभावना, साथ ही सुरक्षित बायबैक पॉलिसी की सुविधा।",
+    image:"https://img.freepik.com/free-photo/land-plot-sale-real-estate-banner_23-2149935681.jpg"
+    },
+    
+    {
+    text:"ग्रेटर पटना के तेजी से विकसित हो रहे इलाके में मात्र 1299 रुपये प्रति स्क्वायर फीट की किफायती कीमत पर अपना प्लॉट खरीदने का शानदार मौका।",
+    image:"https://img.freepik.com/free-photo/drone-view-empty-land-plots_23-2149935667.jpg"
+    },
+    
+    {
+    text:"इस टाउनशिप में बिजली, पानी, चौड़ी सड़कें और स्ट्रीट लाइट जैसी सभी आधुनिक सुविधाएं उपलब्ध हैं, जो आपके रहने को बनाती हैं आरामदायक और सुरक्षित।",
+    image:"https://img.freepik.com/free-photo/new-residential-area-with-roads-plots_23-2149935679.jpg"
+    },
+    
+    {
+    text:"तो देर किस बात की? आज ही अपना प्लॉट बुक करें और ग्रेटर पटना के उज्ज्वल भविष्य का हिस्सा बनें।",
+    image:"https://img.freepik.com/free-photo/aerial-view-real-estate-development-land_23-2149935668.jpg"
+    }
 
 ]
 
@@ -116,7 +108,7 @@ const speech = new SpeechSynthesisUtterance(text)
 speech.lang = "hi-IN"
 
 speech.rate = 0.8
-speech.pitch = -0.5
+speech.pitch = 0.22
 speech.volume = 1
 
 const voices = speechSynthesis.getVoices()
@@ -124,9 +116,7 @@ const voices = speechSynthesis.getVoices()
 const hindiVoice = voices.find(v => v.lang.includes("hi"))
 
 if(hindiVoice){
-
 speech.voice = hindiVoice
-
 }
 
 speech.onend = callback
@@ -140,9 +130,7 @@ speechSynthesis.speak(speech)
 function playSegment(){
 
 if(index >= segments.length){
-
 return
-
 }
 
 const data = segments[index]
@@ -156,9 +144,7 @@ speak(data.text, () => {
 index++
 
 setTimeout(() => {
-
 playSegment()
-
 },500)
 
 })
@@ -174,9 +160,7 @@ playSegment()
 }
 
 speechSynthesis.onvoiceschanged = () => {
-
 speechSynthesis.getVoices()
-
 }
 
 </script>

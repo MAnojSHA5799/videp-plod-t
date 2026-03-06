@@ -53,6 +53,16 @@ border-radius:8px;
 cursor:pointer;
 }
 
+#timer{
+position:fixed;
+bottom:20px;
+right:20px;
+font-size:20px;
+background:rgba(0,0,0,0.5);
+padding:10px 15px;
+border-radius:6px;
+}
+
 </style>
 </head>
 
@@ -68,38 +78,47 @@ cursor:pointer;
 
 </div>
 
+<div id="timer">0 sec</div>
+
+<!-- ✅ Local Background Music -->
+<audio id="music" loop>
+<source src="bgmusic1.mp3" type="audio/mp3">
+</audio>
+
 <script>
 
 const segments = [
 
 {
-    text:"आई आई टी पटना, बिहटा के पास ग्रेटर पटना में विकसित हो रही टाउनशिप में आवासीय जमीन खरीदने का सुनहरा अवसर। भविष्य के लिए सुरक्षित और शानदार निवेश।",
-    image:"https://img.freepik.com/free-photo/aerial-view-land-plot-real-estate-development_23-2149935673.jpg"
-    },
-    
-    {
-    text:"यहां निवेश करने पर आपको मिलती है तीन साल में निवेश दोगुना होने की संभावना, साथ ही सुरक्षित बायबैक पॉलिसी की सुविधा।",
-    image:"https://img.freepik.com/free-photo/land-plot-sale-real-estate-banner_23-2149935681.jpg"
-    },
-    
-    {
-    text:"ग्रेटर पटना के तेजी से विकसित हो रहे इलाके में मात्र 1299 रुपये प्रति स्क्वायर फीट की किफायती कीमत पर अपना प्लॉट खरीदने का शानदार मौका।",
-    image:"https://img.freepik.com/free-photo/drone-view-empty-land-plots_23-2149935667.jpg"
-    },
-    
-    {
-    text:"इस टाउनशिप में बिजली, पानी, चौड़ी सड़कें और स्ट्रीट लाइट जैसी सभी आधुनिक सुविधाएं उपलब्ध हैं, जो आपके रहने को बनाती हैं आरामदायक और सुरक्षित।",
-    image:"https://img.freepik.com/free-photo/new-residential-area-with-roads-plots_23-2149935679.jpg"
-    },
-    
-    {
-    text:"तो देर किस बात की? आज ही अपना प्लॉट बुक करें और ग्रेटर पटना के उज्ज्वल भविष्य का हिस्सा बनें।",
-    image:"https://img.freepik.com/free-photo/aerial-view-real-estate-development-land_23-2149935668.jpg"
-    }
+text:"आई आई टी पटना, बिहटा के पास ग्रेटर पटना में विकसित हो रही टाउनशिप में आवासीय जमीन खरीदने का शानदार अवसर। भविष्य के लिए सुरक्षित निवेश।",
+image:"https://img.freepik.com/free-photo/aerial-view-land-plot-real-estate-development_23-2149935673.jpg"
+},
+
+{
+text:"यहां निवेश करने पर तीन साल में निवेश दोगुना होने की संभावना, और सुरक्षित बायबैक पॉलिसी की सुविधा भी।",
+image:"https://img.freepik.com/free-photo/land-plot-sale-real-estate-banner_23-2149935681.jpg"
+},
+
+{
+text:"ग्रेटर पटना के तेजी से विकसित इलाके में मात्र 1299 रुपये प्रति स्क्वायर फीट में अपना प्लॉट खरीदने का शानदार मौका।",
+image:"https://img.freepik.com/free-photo/drone-view-empty-land-plots_23-2149935667.jpg"
+},
+
+{
+text:"यहां बिजली, पानी, चौड़ी सड़कें और स्ट्रीट लाइट जैसी सभी आधुनिक सुविधाएं उपलब्ध हैं।",
+image:"https://img.freepik.com/free-photo/new-residential-area-with-roads-plots_23-2149935679.jpg"
+},
+
+{
+text:"तो देर किस बात की। आज ही अपना प्लॉट बुक करें और ग्रेटर पटना के उज्ज्वल भविष्य का हिस्सा बनें।",
+image:"https://img.freepik.com/free-photo/aerial-view-real-estate-development-land_23-2149935668.jpg"
+}
 
 ]
 
 let index = 0
+let seconds = 0
+let timerInterval
 
 function speak(text,callback){
 
@@ -107,23 +126,20 @@ const speech = new SpeechSynthesisUtterance(text)
 
 speech.lang = "hi-IN"
 
-speech.rate = 0.8
-speech.pitch = 0.22
+speech.rate = 1.18
+speech.pitch = 1.05
 speech.volume = 1
 
 const voices = speechSynthesis.getVoices()
-
 const hindiVoice = voices.find(v => v.lang.includes("hi"))
 
 if(hindiVoice){
 speech.voice = hindiVoice
 }
 
-
 speech.onend = callback
 
 speechSynthesis.cancel()
-
 speechSynthesis.speak(speech)
 
 }
@@ -131,22 +147,27 @@ speechSynthesis.speak(speech)
 function playSegment(){
 
 if(index >= segments.length){
+
+clearInterval(timerInterval)
+
 return
 }
 
 const data = segments[index]
 
 document.getElementById("text").innerText = data.text
-
-document.getElementById("bg").style.backgroundImage = `url(${data.image})`
+document.getElementById("bg").style.backgroundImage =
+`url(${data.image})`
 
 speak(data.text, () => {
 
 index++
 
-setTimeout(() => {
+setTimeout(()=>{
+
 playSegment()
-},500)
+
+},300)
 
 })
 
@@ -155,13 +176,25 @@ playSegment()
 function startAd(){
 
 index = 0
+seconds = 0
+
+const music = document.getElementById("music")
+
+music.volume = 0.22
+music.currentTime = 0
+music.play()
+
+timerInterval = setInterval(()=>{
+
+seconds++
+
+document.getElementById("timer").innerText =
+seconds + " sec"
+
+},1000)
 
 playSegment()
 
-}
-
-speechSynthesis.onvoiceschanged = () => {
-speechSynthesis.getVoices()
 }
 
 </script>

@@ -1,257 +1,183 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
-
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Pinkcity Developers</title>
-
-<script src="https://cdn.tailwindcss.com"></script>
-<script src="https://code.responsivevoice.org/responsivevoice.js"></script>
+<title>Plot Advertisement</title>
 
 <style>
 
 body{
 margin:0;
-background:black;
+padding:0;
 font-family:Arial;
+color:white;
 overflow:hidden;
 }
 
-.bg{
-position:absolute;
-width:100%;
-height:100%;
-object-fit:cover;
-z-index:1;
-transition:opacity 1.5s;
-}
+#bg{
 
-.overlay{
-position:absolute;
-width:100%;
-height:100%;
-background:linear-gradient(to bottom,rgba(0,0,0,0.2),rgba(0,0,0,0.9));
-z-index:2;
-}
-
-.screen{
-position:absolute;
+position:fixed;
 top:0;
 left:0;
 width:100%;
 height:100%;
-display:none;
-justify-content:center;
-align-items:center;
+background-size:cover;
+background-position:center;
+filter:brightness(0.6);
+transition:background-image 1s ease-in-out;
+
+}
+
+#content{
+
+position:absolute;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
 text-align:center;
-color:white;
-padding:40px;
-z-index:5;
-animation:fade 1s ease;
+width:80%;
+
 }
 
-.screen.active{
-display:flex;
-}
+#text{
 
-@keyframes fade{
-from{opacity:0;transform:translateY(20px)}
-to{opacity:1;transform:translateY(0)}
-}
-
-.startOverlay{
-position:absolute;
-top:0;
-left:0;
-width:100%;
-height:100%;
-display:flex;
-justify-content:center;
-align-items:center;
-background:black;
-z-index:20;
-}
-
-.startBtn{
-background:#ec4899;
-padding:20px 50px;
-border-radius:50px;
-font-size:22px;
+font-size:42px;
+line-height:1.6;
 font-weight:bold;
+text-shadow:0px 2px 10px rgba(0,0,0,0.8);
+
+}
+
+button{
+
+margin-top:40px;
+padding:15px 40px;
+font-size:20px;
+background:#ff0055;
+border:none;
+color:white;
+border-radius:8px;
 cursor:pointer;
+
 }
 
 </style>
-
 </head>
 
 <body>
 
-<!-- Background Image -->
+<div id="bg"></div>
 
-<img id="bgImage" class="bg" src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=1600">
+<div id="content">
 
-<div class="overlay"></div>
+<div id="text">Start Advertisement</div>
 
-<!-- Start Screen -->
+<button onclick="startAd()">Play Ad</button>
 
-<div id="startOverlay" class="startOverlay">
-<div class="startBtn">▶ Start Property Video</div>
-</div>
-
-<!-- Background Music -->
-
-<audio id="bgMusic" loop>
-<source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_7d0fdbd1b6.mp3">
-</audio>
-
-<!-- Scene 1 -->
-
-<div id="s1" class="screen active">
-<div>
-<h1 class="text-6xl font-bold">PINKCITY</h1>
-<h2 class="text-4xl text-pink-400 mt-2">DEVELOPERS</h2>
-<p class="mt-6 text-xl">Premium Township Project</p>
-</div>
-</div>
-
-<!-- Scene 2 -->
-
-<div id="s2" class="screen">
-<div>
-<h2 class="text-5xl font-bold">IIT Patna Bihta के पास</h2>
-<p class="mt-6 text-xl">Residential Plots Available</p>
-</div>
-</div>
-
-<!-- Scene 3 -->
-
-<div id="s3" class="screen">
-<div>
-<h2 class="text-5xl font-bold">3 साल में निवेश दोगुना</h2>
-<p class="text-xl mt-4">Buyback Policy Available</p>
-</div>
-</div>
-
-<!-- Scene 4 -->
-
-<div id="s4" class="screen">
-<div>
-<h1 class="text-7xl text-yellow-400 font-bold">₹1299</h1>
-<p class="text-2xl mt-4">Per Square Feet</p>
-</div>
-</div>
-
-<!-- Scene 5 -->
-
-<div id="s5" class="screen">
-<div>
-<h2 class="text-4xl font-bold mb-6">Amenities</h2>
-<p class="text-xl">Electricity</p>
-<p class="text-xl">Water Supply</p>
-<p class="text-xl">Street Light</p>
-<p class="text-xl">30 Feet Road</p>
-</div>
-</div>
-
-<!-- Scene 6 -->
-
-<div id="s6" class="screen">
-<div>
-<h2 class="text-4xl font-bold">Call Now</h2>
-<h1 class="text-5xl text-pink-400 mt-4">93049 93560</h1>
-
-<p class="mt-5 text-sm">
-408 RC Western Mall<br>
-Saguna More Patna
-</p>
-
-</div>
 </div>
 
 <script>
 
-const scenes=["s1","s2","s3","s4","s5","s6"]
+const segments = [
 
-const images=[
+{
+text:"आई आई टी पटना बिहटा के पास ग्रेटर पटना में टाउनशिप में आवासीय जमीन खरीदने का सुनहरा अवसर",
+image:"img1.jpg"
+},
 
-"https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=1600",
-"https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1600",
-"https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=1600",
-"https://images.unsplash.com/photo-1599423300746-b62533397364?w=1600",
-"https://images.unsplash.com/photo-1572120360610-d971b9d7767c?w=1600",
-"https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1600"
+{
+text:"तीन साल में निवेश दोगुना बायबैक पॉलिसी के साथ",
+image:"img2.jpg"
+},
+
+{
+text:"ग्रेटर पटना में निवेश करें मात्र बारह सौ निन्यानवे रुपये प्रति स्क्वायर फीट",
+image:"img3.jpg"
+},
+
+{
+text:"बिजली पानी और स्ट्रीट लाइट जैसी सभी सुविधाओं के साथ",
+image:"img4.jpg"
+},
+
+{
+text:"आज ही बुक करें अपना प्लॉट",
+image:"img5.jpg"
+}
 
 ]
 
-let step=0
+let index = 0
 
-function showScene(){
+function speak(text,callback){
 
-scenes.forEach(id=>{
-document.getElementById(id).classList.remove("active")
+const speech = new SpeechSynthesisUtterance(text)
+
+speech.lang = "hi-IN"
+
+speech.rate = 0.8
+speech.pitch = -0.5
+speech.volume = 1
+
+const voices = speechSynthesis.getVoices()
+
+const hindiVoice = voices.find(v => v.lang.includes("hi"))
+
+if(hindiVoice){
+
+speech.voice = hindiVoice
+
+}
+
+speech.onend = callback
+
+speechSynthesis.cancel()
+
+speechSynthesis.speak(speech)
+
+}
+
+function playSegment(){
+
+if(index >= segments.length){
+
+return
+
+}
+
+const data = segments[index]
+
+document.getElementById("text").innerText = data.text
+
+document.getElementById("bg").style.backgroundImage = `url(${data.image})`
+
+speak(data.text, () => {
+
+index++
+
+setTimeout(() => {
+
+playSegment()
+
+},500)
+
 })
 
-document.getElementById(scenes[step]).classList.add("active")
+}
 
-document.getElementById("bgImage").src=images[step]
+function startAd(){
+
+index = 0
+
+playSegment()
 
 }
 
-function playVoice(){
+speechSynthesis.onvoiceschanged = () => {
 
-const text=`
-
-Pinkcity Developers lekar aaye hain ek premium township project.
-
-IIT Patna Bihta ke paas residential plots available hain.
-
-Sirf teen saal mein investment ho sakta hai double.
-
-Sirf 1299 rupaye per square feet mein plot book karein.
-
-Electricity water supply aur street light jaise sabhi facilities available hain.
-
-Aaj hi call karein 93049 93560.
-
-`
-
-responsiveVoice.speak(text,"Hindi Female",{rate:0.9})
+speechSynthesis.getVoices()
 
 }
-
-function startVideo(){
-
-document.getElementById("startOverlay").style.display="none"
-
-const music=document.getElementById("bgMusic")
-
-music.volume=0.25
-
-music.play()
-
-playVoice()
-
-showScene()
-
-let timer=setInterval(()=>{
-
-step++
-
-if(step>=scenes.length){
-clearInterval(timer)
-return
-}
-
-showScene()
-
-},6000)
-
-}
-
-document.getElementById("startOverlay").onclick=startVideo
 
 </script>
 

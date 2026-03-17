@@ -71,7 +71,6 @@ margin-top:40px;
 
 #leadForm input,
 #leadForm select{
-
 padding:12px;
 width:300px;
 font-size:16px;
@@ -103,7 +102,6 @@ color:#00ff95;
 <div id="text">Start Advertisement</div>
 
 <button onclick="startAd()">Play Ad</button>
-
 
 <div id="leadForm">
 
@@ -143,14 +141,33 @@ color:#00ff95;
 
 <div id="timer">0 sec</div>
 
-
 <audio id="music" loop>
 <source src="bgmusic1.mp3" type="audio/mp3">
 </audio>
 
-
 <script>
 
+// ✅ NUMBER → HINDI DIGIT WORDS
+function numberToWords(num) {
+  const map = {
+    "0": "शून्य",
+    "1": "एक",
+    "2": "दो",
+    "3": "तीन",
+    "4": "चार",
+    "5": "पांच",
+    "6": "छह",
+    "7": "सात",
+    "8": "आठ",
+    "9": "नौ"
+  };
+  return num.split("").map(d => map[d]).join(" ");
+}
+
+const phoneNumber = "6203844919"
+const spokenNumber = numberToWords(phoneNumber)
+
+// ✅ AD SEGMENTS
 const segments = [
 
 {
@@ -173,26 +190,26 @@ text:"यहां बिजली, पानी, चौड़ी सड़क�
 image:"https://images.unsplash.com/photo-1600585154340-be6161a56a0c"
 },
 
+// ✅ FINAL SEGMENT (DISPLAY vs VOICE अलग)
 {
-    text: "तो देर किस बात की। आज ही अपना प्लॉट बुक करें और ग्रेटर पटना के उज्ज्वल भविष्य का हिस्सा बनें। संपर्क करें: 6203844919",
-    image: "https://images.unsplash.com/photo-1600585154154-7121a6b0b8c7"
-  }
+text:`तो देर किस बात की। आज ही अपना प्लॉट बुक करें और ग्रेटर पटना के उज्ज्वल भविष्य का हिस्सा बनें। संपर्क करें: ${phoneNumber}`,
+voiceText:`तो देर किस बात की। आज ही अपना प्लॉट बुक करें और ग्रेटर पटना के उज्ज्वल भविष्य का हिस्सा बनें। संपर्क करें: ${spokenNumber}`,
+image:"https://images.unsplash.com/photo-1600585154154-7121a6b0b8c7"
+}
 
 ]
-
 
 let index = 0
 let seconds = 0
 let timerInterval
 
-
+// ✅ SPEAK FUNCTION
 function speak(text,callback){
 
 const speech = new SpeechSynthesisUtterance(text)
 
 speech.lang = "hi-IN"
-
-speech.rate = 1.15
+speech.rate = 1.05
 speech.pitch = 1.05
 speech.volume = 1
 
@@ -210,7 +227,7 @@ speechSynthesis.speak(speech)
 
 }
 
-
+// ✅ PLAY SEGMENTS
 function playSegment(){
 
 if(index >= segments.length){
@@ -218,7 +235,6 @@ if(index >= segments.length){
 clearInterval(timerInterval)
 
 document.getElementById("leadForm").style.display = "block"
-
 document.getElementById("text").innerText = "अभी जानकारी भरें और अपना प्लॉट बुक करें"
 
 return
@@ -226,26 +242,22 @@ return
 
 const data = segments[index]
 
+// 👉 Screen par normal text (digits)
 document.getElementById("text").innerText = data.text
 
-document.getElementById("bg").style.backgroundImage =
-`url(${data.image})`
+document.getElementById("bg").style.backgroundImage = `url(${data.image})`
 
-speak(data.text, () => {
+// 👉 Voice ke liye alag text
+const speakText = data.voiceText || data.text
 
+speak(speakText, () => {
 index++
-
-setTimeout(()=>{
-
-playSegment()
-
-},300)
-
+setTimeout(()=>{ playSegment() },300)
 })
 
 }
 
-
+// ✅ START AD
 function startAd(){
 
 index = 0
@@ -254,25 +266,20 @@ seconds = 0
 document.getElementById("leadForm").style.display="none"
 
 const music = document.getElementById("music")
-
 music.volume = 0.17
 music.currentTime = 0
 music.play()
 
 timerInterval = setInterval(()=>{
-
 seconds++
-
-document.getElementById("timer").innerText =
-seconds + " sec"
-
+document.getElementById("timer").innerText = seconds + " sec"
 },1000)
 
 playSegment()
 
 }
 
-
+// ✅ FORM SUBMIT
 function submitForm(){
 
 const name = document.getElementById("name").value
@@ -282,20 +289,16 @@ const investment = document.getElementById("investment").value
 const plotSize = document.getElementById("plotSize").value
 
 if(!name || !mobile){
-
 alert("कृपया नाम और मोबाइल नंबर भरें")
-
 return
 }
 
 console.log({
-
 name,
 mobile,
 district,
 investment,
 plotSize
-
 })
 
 document.getElementById("thankyou").style.display="block"

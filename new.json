@@ -1,0 +1,67 @@
+{
+    "name":"Facebook Leads to Google Sheets",
+    "nodes":[
+    {
+    "parameters":{
+    "path":"facebook-leads"
+    },
+    "id":"webhook",
+    "name":"Facebook Lead Webhook",
+    "type":"n8n-nodes-base.webhook",
+    "typeVersion":1,
+    "position":[200,300]
+    },
+    {
+    "parameters":{
+    "method":"GET",
+    "url":"https://graph.facebook.com/v20.0/{{$json[\"leadgen_id\"]}}",
+    "sendQuery":true,
+    "queryParameters":{
+    "parameters":[
+    {
+    "name":"access_token",
+    "value":"={{$env.META_ACCESS_TOKEN}}"
+    }
+    ]
+    }
+    },
+    "id":"get-lead",
+    "name":"Get Lead Data",
+    "type":"n8n-nodes-base.httpRequest",
+    "typeVersion":4,
+    "position":[450,300]
+    },
+    {
+    "parameters":{
+    "operation":"append",
+    "sheetId":"YOUR_GOOGLE_SHEET_ID",
+    "range":"Sheet1!A:D"
+    },
+    "id":"google-sheet",
+    "name":"Save Lead",
+    "type":"n8n-nodes-base.googleSheets",
+    "typeVersion":4,
+    "position":[700,300]
+    }
+    ],
+    "connections":{
+    "Facebook Lead Webhook":{
+    "main":[[
+    {
+    "node":"Get Lead Data",
+    "type":"main",
+    "index":0
+    }
+    ]]
+    },
+    "Get Lead Data":{
+    "main":[[
+    {
+    "node":"Save Lead",
+    "type":"main",
+    "index":0
+    }
+    ]]
+    }
+    }
+    }

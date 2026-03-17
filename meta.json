@@ -1,0 +1,68 @@
+{
+    "name": "Dummy FB Ads Success Workflow",
+    "nodes": [
+      {
+        "parameters": {},
+        "id": "start-node",
+        "name": "Start",
+        "type": "n8n-nodes-base.start",
+        "typeVersion": 1,
+        "position": [250, 300]
+      },
+      {
+        "parameters": {
+          "values": {
+            "string": [
+              { "name": "campaign_name", "value": "Test Campaign" },
+              { "name": "adset_name", "value": "Test AdSet" },
+              { "name": "ad_name", "value": "Test Ad Creative" },
+              { "name": "status", "value": "ACTIVE" }
+            ],
+            "number": [
+              { "name": "daily_budget", "value": 200 }
+            ]
+          }
+        },
+        "id": "set-node",
+        "name": "Set Campaign Data",
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 2,
+        "position": [450, 300]
+      },
+      {
+        "parameters": {
+          "functionCode": "return [{\n  json: {\n    success: true,\n    message: \"Ad Created Successfully (Dummy)\",\n    campaign_id: \"cmp_123456\",\n    adset_id: \"adset_78910\",\n    ad_id: \"ad_54321\",\n    status: \"ACTIVE\",\n    timestamp: new Date().toISOString()\n  }\n}];"
+        },
+        "id": "function-node",
+        "name": "Simulate FB Ads Response",
+        "type": "n8n-nodes-base.function",
+        "typeVersion": 1,
+        "position": [650, 300]
+      }
+    ],
+    "connections": {
+      "Start": {
+        "main": [
+          [
+            {
+              "node": "Set Campaign Data",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Set Campaign Data": {
+        "main": [
+          [
+            {
+              "node": "Simulate FB Ads Response",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "active": false
+  }

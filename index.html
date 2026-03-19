@@ -12,6 +12,7 @@ padding:0;
 font-family:Arial;
 color:white;
 overflow:hidden;
+background:#000;
 }
 
 /* BACKGROUND */
@@ -23,6 +24,7 @@ width:100%;
 height:100%;
 background-size:cover;
 background-position:center;
+background-color:#000;
 filter:brightness(0.6);
 transition:opacity 1s ease-in-out;
 }
@@ -54,6 +56,7 @@ right:20px;
 display:flex;
 align-items:center;
 gap:10px;
+z-index:5;
 }
 
 #timer{
@@ -73,102 +76,68 @@ border-radius:6px;
 cursor:pointer;
 }
 
-/* ===== FORM ===== */
+/* ===== FULL SCREEN FORM ===== */
 
 #leadForm{
 display:none;
-margin-top:40px;
-animation:fadeInUp 1s ease;
-background:rgba(255,255,255,0.15);
-backdrop-filter:blur(15px);
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.85);
+z-index:10;
+
+justify-content:center;
+align-items:center;
+flex-direction:column;
+}
+
+/* FORM BOX */
+.formBox{
+background:rgba(255,255,255,0.95);
 padding:30px;
 border-radius:20px;
-box-shadow:0 10px 40px rgba(0,0,0,0.4);
-width:660px;
-margin:auto;
-
+width:90%;
+max-width:500px;
 display:flex;
 flex-direction:column;
 gap:12px;
+color:#000;
+animation:fadeInUp 0.8s ease;
 }
 
-#leadForm h2{
-font-size:24px;
-margin:0;
-}
-
-#leadForm p{
-font-size:14px;
-color:#ddd;
-margin:0;
-}
-
-/* INPUT + SELECT */
-#leadForm input,
-#leadForm select{
+/* INPUT */
+.formBox input,
+.formBox select{
 width:100%;
-box-sizing:border-box;
 padding:14px;
-font-size:15px;
 border-radius:10px;
 border:none;
-outline:none;
-background:rgba(255,255,255,0.9);
-color:#000; /* 🔥 text black */
-appearance:none;
-}
-
-/* 🔥 BLACK PLACEHOLDER */
-#leadForm input::placeholder{
-color:#000;
-font-weight:500;
-}
-
-/* SELECT TEXT */
-#leadForm select{
-color:#000;
-}
-
-/* DROPDOWN ICON */
-#leadForm select{
-background-image:url("data:image/svg+xml;utf8,<svg fill='black' height='24' viewBox='0 0 24 24' width='24'><path d='M7 10l5 5 5-5z'/></svg>");
-background-repeat:no-repeat;
-background-position:right 10px center;
-background-size:18px;
-padding-right:35px;
-}
-
-/* FOCUS */
-#leadForm input:focus,
-#leadForm select:focus{
 background:#fff;
-transform:scale(1.03);
+color:#000;
+}
+
+/* PLACEHOLDER BLACK */
+.formBox input::placeholder{
+color:#000;
 }
 
 /* BUTTON */
-#leadForm button{
-width:100%;
+.formBox button{
 padding:14px;
-font-size:17px;
-font-weight:bold;
-background:linear-gradient(45deg,#00c853,#64dd17);
+background:#00c853;
+color:#fff;
 border:none;
 border-radius:10px;
-color:white;
+font-size:16px;
 cursor:pointer;
-transition:0.3s;
-}
-
-#leadForm button:hover{
-transform:scale(1.05);
-box-shadow:0 5px 20px rgba(0,200,83,0.6);
 }
 
 #thankyou{
 display:none;
-font-size:20px;
 margin-top:10px;
-color:#00ff95;
+color:#00aa55;
 }
 
 /* ANIMATION */
@@ -186,19 +155,20 @@ to{opacity:1;transform:translateY(0);}
 <div id="bg2" class="bgLayer"></div>
 
 <div id="content">
-
 <div id="text">Start Advertisement</div>
+</div>
 
+<!-- FULL SCREEN FORM -->
 <div id="leadForm">
+<div class="formBox">
 
 <h2>🏡 अपना प्लॉट बुक करें</h2>
-<p>सिर्फ 30 सेकंड में जानकारी भरें</p>
 
-<input type="text" id="name" placeholder="आपका नाम">
-<input type="tel" id="mobile" placeholder="मोबाइल नंबर">
-<input type="text" id="district" placeholder="जिला (District)">
+<input type="text" placeholder="आपका नाम">
+<input type="tel" placeholder="मोबाइल नंबर">
+<input type="text" placeholder="जिला (District)">
 
-<select id="investment">
+<select>
 <option value="">कितना निवेश करना चाहते हैं</option>
 <option>₹1 लाख - ₹3 लाख</option>
 <option>₹3 लाख - ₹5 लाख</option>
@@ -206,7 +176,7 @@ to{opacity:1;transform:translateY(0);}
 <option>₹10 लाख से ज्यादा</option>
 </select>
 
-<select id="plotSize">
+<select>
 <option value="">प्लॉट साइज चुनें</option>
 <option>600 sqft</option>
 <option>800 sqft</option>
@@ -221,9 +191,9 @@ to{opacity:1;transform:translateY(0);}
 </div>
 
 </div>
-
 </div>
 
+<!-- CONTROL -->
 <div id="controlBox">
 <div id="timer">0 sec</div>
 <button id="toggleBtn" onclick="toggleAd()">▶ Play</button>
@@ -235,8 +205,7 @@ to{opacity:1;transform:translateY(0);}
 
 <script>
 
-// SAME ORIGINAL LOGIC
-
+// NUMBER → WORDS
 function numberToWords(num){
 const map={"0":"शून्य","1":"एक","2":"दो","3":"तीन","4":"चार","5":"पांच","6":"छह","7":"सात","8":"आठ","9":"नौ"}
 return num.split("").map(d=>map[d]).join(" ")
@@ -245,34 +214,57 @@ return num.split("").map(d=>map[d]).join(" ")
 const phoneNumber="6203844919"
 const spokenNumber=numberToWords(phoneNumber)
 
+// ORIGINAL SEGMENTS
 const segments=[
+
 {
 text:"आई आई टी पटना, बिहटा के पास ग्रेटर पटना में विकसित हो रही टाउनशिप में आवासीय जमीन खरीदने का शानदार अवसर। भविष्य के लिए सुरक्षित निवेश।",
 image:"image/11.jpg"
 },
+
 {
 text:"यहां निवेश करने पर तीन साल में निवेश दोगुना हो जाएगा, और सुरक्षित बायबैक पॉलिसी की सुविधा भी।",
 image:"image/12.jpg"
 },
+
 {
 text:"ग्रेटर पटना के तेजी से विकसित इलाके में मात्र 1299 रुपये प्रति स्क्वायर फीट में अपना प्लॉट खरीदने का शानदार मौका।",
 image:"image/13.jpg"
 },
+
 {
 text:"यहां बिजली, पानी, चौड़ी सड़कें और स्ट्रीट लाइट जैसी सभी आधुनिक सुविधाएं उपलब्ध हैं।",
 image:"image/14.jpg"
 },
+
 {
 text:`तो देर किस बात की। आज ही अपना प्लॉट बुक करें और ग्रेटर पटना के उज्ज्वल भविष्य का हिस्सा बनें। संपर्क करें: ${phoneNumber}`,
 voiceText:`तो देर किस बात की। आज ही अपना प्लॉट बुक करें और ग्रेटर पटना के उज्ज्वल भविष्य का हिस्सा बनें। संपर्क करें: ${spokenNumber}`,
 image:"image/17.jpg"
 }
+
 ]
 
-let index=0,seconds=0,timerInterval
-let isPaused=true,isStarted=false,currentBg=1
+// PRELOAD
+const cache={}
+segments.forEach(s=>{
+const img=new Image()
+img.src=s.image
+cache[s.image]=img
+})
+
+let index=0,currentBg=1,isPaused=true,isStarted=false,timerInterval,seconds=0
 
 function changeBackground(image){
+const img=cache[image]
+if(img.complete){
+switchBg(image)
+}else{
+img.onload=()=>switchBg(image)
+}
+}
+
+function switchBg(image){
 const bg1=document.getElementById("bg1")
 const bg2=document.getElementById("bg2")
 
@@ -303,8 +295,8 @@ if(isPaused) return
 
 if(index>=segments.length){
 clearInterval(timerInterval)
+document.getElementById("content").style.display="none"
 document.getElementById("leadForm").style.display="flex"
-document.getElementById("text").innerText="अभी जानकारी भरें और अपना प्लॉट बुक करें"
 return
 }
 
@@ -313,10 +305,8 @@ document.getElementById("text").innerText=data.text
 changeBackground(data.image)
 
 speak(data.voiceText||data.text,()=>{
-if(!isPaused){
 index++
 setTimeout(playSegment,500)
-}
 })
 }
 
@@ -325,8 +315,6 @@ index=0
 seconds=0
 isPaused=false
 isStarted=true
-
-document.getElementById("leadForm").style.display="none"
 
 const music=document.getElementById("music")
 music.volume=0.17

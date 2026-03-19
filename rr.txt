@@ -79,12 +79,12 @@ cursor:pointer;
 display:none;
 margin-top:40px;
 animation:fadeInUp 1s ease;
-background:rgba(255,255,255,0.15);
+background:rgba(255,255,255,0.12);
 backdrop-filter:blur(15px);
 padding:30px;
 border-radius:20px;
 box-shadow:0 10px 40px rgba(0,0,0,0.4);
-width:660px;
+width:360px;
 margin:auto;
 
 display:flex;
@@ -103,7 +103,7 @@ color:#ddd;
 margin:0;
 }
 
-/* INPUT + SELECT */
+/* INPUT + SELECT SAME WIDTH */
 #leadForm input,
 #leadForm select{
 width:100%;
@@ -113,35 +113,35 @@ font-size:15px;
 border-radius:10px;
 border:none;
 outline:none;
-background:rgba(255,255,255,0.9);
-color:#000; /* 🔥 text black */
+background:rgba(255,255,255,0.2);
+color:#fff;
 appearance:none;
 }
 
-/* 🔥 BLACK PLACEHOLDER */
+/* 🔥 PLACEHOLDER COLOR FIX */
 #leadForm input::placeholder{
-color:#000;
+color:rgba(255,255,255,0.85);
 font-weight:500;
 }
 
-/* SELECT TEXT */
+/* SELECT TEXT COLOR */
 #leadForm select{
-color:#000;
+color:#fff;
 }
 
 /* DROPDOWN ICON */
 #leadForm select{
-background-image:url("data:image/svg+xml;utf8,<svg fill='black' height='24' viewBox='0 0 24 24' width='24'><path d='M7 10l5 5 5-5z'/></svg>");
+background-image:url("data:image/svg+xml;utf8,<svg fill='white' height='24' viewBox='0 0 24 24' width='24'><path d='M7 10l5 5 5-5z'/></svg>");
 background-repeat:no-repeat;
 background-position:right 10px center;
 background-size:18px;
 padding-right:35px;
 }
 
-/* FOCUS */
+/* FOCUS EFFECT */
 #leadForm input:focus,
 #leadForm select:focus{
-background:#fff;
+background:rgba(255,255,255,0.35);
 transform:scale(1.03);
 }
 

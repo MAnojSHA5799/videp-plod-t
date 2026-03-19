@@ -14,7 +14,8 @@ color:white;
 overflow:hidden;
 }
 
-#bg{
+/* DOUBLE BACKGROUND LAYERS */
+.bgLayer{
 position:fixed;
 top:0;
 left:0;
@@ -24,8 +25,11 @@ background-size:cover;
 background-position:center;
 background-repeat:no-repeat;
 filter:brightness(0.6);
-transition:background-image 1s ease-in-out;
+transition:opacity 1s ease-in-out;
 }
+
+#bg1{ z-index:-2; opacity:1; }
+#bg2{ z-index:-1; opacity:0; }
 
 #content{
 position:absolute;
@@ -43,7 +47,7 @@ font-weight:bold;
 text-shadow:0px 2px 10px rgba(0,0,0,0.8);
 }
 
-/* Timer + Button container */
+/* Timer + Button */
 #controlBox{
 position:fixed;
 bottom:20px;
@@ -101,7 +105,9 @@ color:#00ff95;
 
 <body>
 
-<div id="bg"></div>
+<!-- DOUBLE BACKGROUND -->
+<div id="bg1" class="bgLayer"></div>
+<div id="bg2" class="bgLayer"></div>
 
 <div id="content">
 
@@ -162,41 +168,70 @@ return num.split("").map(d=>map[d]).join(" ")
 const phoneNumber="6203844919"
 const spokenNumber=numberToWords(phoneNumber)
 
-// LOCAL image
+// SEGMENTS
 const segments=[
 
 {
 text:"आई आई टी पटना, बिहटा के पास ग्रेटर पटना में विकसित हो रही टाउनशिप में आवासीय जमीन खरीदने का शानदार अवसर। भविष्य के लिए सुरक्षित निवेश।",
-image:"image/ten.jpg"
+image:"image/11.jpg"
 },
 
 {
 text:"यहां निवेश करने पर तीन साल में निवेश दोगुना हो जाएगा, और सुरक्षित बायबैक पॉलिसी की सुविधा भी।",
-image:"image/two.jpg"
+image:"image/12.jpg"
 },
 
 {
 text:"ग्रेटर पटना के तेजी से विकसित इलाके में मात्र 1299 रुपये प्रति स्क्वायर फीट में अपना प्लॉट खरीदने का शानदार मौका।",
-image:"image/three.jpg"
+image:"image/13.jpg"
 },
 
 {
 text:"यहां बिजली, पानी, चौड़ी सड़कें और स्ट्रीट लाइट जैसी सभी आधुनिक सुविधाएं उपलब्ध हैं।",
-image:"image/seven.jpg"
+image:"image/14.jpg"
 },
 
 {
-text:`तो देर किस बात की। आज ही अपना प्लॉट बुक करें और ग्रेटर पटना के उज्ज्वल भविष्य का हिस्सा बनें। संपर्क करें: ${phoneNumber}`,
-voiceText:`तो देर किस बात की। आज ही अपना प्लॉट बुक करें। संपर्क करें: ${spokenNumber}`,
-image:"image/ne.jpg"
+    
+        text:`तो देर किस बात की। आज ही अपना प्लॉट बुक करें और ग्रेटर पटना के उज्ज्वल भविष्य का हिस्सा बनें। संपर्क करें: ${phoneNumber}`,
+        voiceText:`तो देर किस बात की। आज ही अपना प्लॉट बुक करें और ग्रेटर पटना के उज्ज्वल भविष्य का हिस्सा बनें। संपर्क करें: ${spokenNumber}`,
+image:"image/17.jpg"
 }
 
 ]
 
+// PRELOAD IMAGES
+const preloadedImages=[]
+segments.forEach(seg=>{
+const img=new Image()
+img.src=seg.image
+preloadedImages.push(img)
+})
+
 let index=0,seconds=0,timerInterval
 let isPaused=true
 let isStarted=false
+let currentBg=1
 
+// SMOOTH BACKGROUND SWITCH
+function changeBackground(image){
+const bg1=document.getElementById("bg1")
+const bg2=document.getElementById("bg2")
+
+if(currentBg===1){
+bg2.style.backgroundImage=`url(${image})`
+bg2.style.opacity=1
+bg1.style.opacity=0
+currentBg=2
+}else{
+bg1.style.backgroundImage=`url(${image})`
+bg1.style.opacity=1
+bg2.style.opacity=0
+currentBg=1
+}
+}
+
+// SPEECH
 function speak(text,callback){
 if(isPaused) return
 
@@ -211,6 +246,7 @@ speechSynthesis.cancel()
 speechSynthesis.speak(speech)
 }
 
+// PLAY SEGMENT
 function playSegment(){
 
 if(isPaused) return
@@ -225,7 +261,7 @@ return
 const data=segments[index]
 
 document.getElementById("text").innerText=data.text
-document.getElementById("bg").style.backgroundImage=`url(${data.image})`
+changeBackground(data.image)
 
 speak(data.voiceText||data.text,()=>{
 if(!isPaused){
@@ -235,6 +271,7 @@ setTimeout(playSegment,500)
 })
 }
 
+// START
 function startAd(){
 
 index=0
@@ -257,29 +294,24 @@ document.getElementById("timer").innerText=seconds+" sec"
 playSegment()
 }
 
-// TOGGLE BUTTON
+// TOGGLE
 function toggleAd(){
 
 const btn=document.getElementById("toggleBtn")
 
-// First time start
 if(!isStarted){
 startAd()
 btn.innerText="⏸ Pause"
 return
 }
 
-// Pause
 if(!isPaused){
 isPaused=true
 speechSynthesis.pause()
 document.getElementById("music").pause()
 clearInterval(timerInterval)
 btn.innerText="▶ Play"
-}
-
-// Resume
-else{
+}else{
 isPaused=false
 speechSynthesis.resume()
 document.getElementById("music").play()
